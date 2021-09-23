@@ -4,5 +4,70 @@
  * This is a general purpose Gradle build.
  * Learn more about Gradle by exploring our samples at https://docs.gradle.org/7.0.2/samples
  */
+buildscript {
+    ext {  // extra로 설정한 변수이며, 반복해서 사용할 것들
+        spring = "2.4.1"
+        boot = "org.springframework.boot"
+        lombok = "org.projectlombok:lombok"
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("$boot:spring-boot-gradle-plugin:$spring")
+    }
+}
 
+allprojects {  // 모든 프로젝트의 공통으로 쓰게될 group과 version
+    group= "com.sp.fc"
+    version = "1.0.0"
+}
+
+subprojects {  // 프로젝트의 하위 폴더 생성
+
+    apply plugin: "java"   // main의 java와 resource 폴더 생성해줌
+    apply plugin: boot     // 부트가 추가해주는 gradle task들 ex) bootWar : war파일로 생성
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: "idea"
+
+    repositories {
+        mavenCentral()
+    }
+
+    configurations {
+//        developmentOnly
+        runtimeClasspath {
+            extendsFrom developmentOnly
+        }
+    }
+    dependencies {
+//        developmentOnly("$boot:spring-boot-devtools") 초반에는 로그인에 문제생김
+        implementation "$boot:spring-boot-starter-security"
+        implementation 'com.fasterxml.jackson.core:jackson-annotations' // json ignore 사용
+
+        compileOnly lombok
+        testCompileOnly lombok
+        annotationProcessor lombok
+        testAnnotationProcessor lombok
+
+        testImplementation "$boot:spring-boot-starter-test"
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
+
+
+["server"].each {
+    def subProjectDir = new File(projectDir, it)
+    subProjectDir.eachDir {dir->
+        def projectName = ":${it}-${dir.name}"
+        project(projectName){
+        }
+    }
+}
+
+
+help.enabled(false)
 
