@@ -38,7 +38,14 @@ public class SecutiryConfig extends WebSecurityConfigurerAdapter {
 //        http.authorizeRequests((requests) -> requests.anyRequest().authenticated()); // 기본적으로 인증하도록 되어 있음
         http.authorizeRequests((requests) -> requests.antMatchers("/").permitAll() // 모든 사람에게 접근 허용하도록 하기
                 .anyRequest().authenticated());
-        http.formLogin();
+        http.formLogin(login ->
+                login.defaultSuccessUrl("/", false) // 로그인 성공 시 root 페이지로 유도, 다른 페이지로 갈려 했는데 로그인 차단된 경우 로그인 후 원래 가려던 곳으로 유도
+        );
         http.httpBasic();
+
+//        http
+//                .headers().disable()
+//                .csrf().disable()
+//                .logout().disable() ;
     }
 }
