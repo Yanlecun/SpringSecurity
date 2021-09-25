@@ -13,8 +13,10 @@
         <module name="spring-security.comp-common-utils.test" />
         <module name="spring-security.server-login-basic.main" />
         <module name="spring-security.server-basic-test.test" />
+        <module name="spring-security.server-basic-authentication-test.main" />
         <module name="spring-security.comp-common-utils.main" />
         <module name="spring-security.server-basic-test.main" />
+        <module name="spring-security.server-basic-authentication-test.test" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="14" />
