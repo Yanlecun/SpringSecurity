@@ -9,7 +9,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 // 통행증 발급 Authentication provider
 @Component
@@ -48,11 +50,16 @@ public class StudentManager implements AuthenticationProvider, InitializingBean 
     @Override
     public void afterPropertiesSet() throws Exception {
         Set.of(
-                new Student("user1", "홍구", Set.of(new SimpleGrantedAuthority("ROLE_STUDENT"))),
-                new Student("user2", "강강이", Set.of(new SimpleGrantedAuthority("ROLE_STUDENT"))),
-                new Student("user3", "뭉치", Set.of(new SimpleGrantedAuthority("ROLE_STUDENT")))
+                new Student("user1", "홍구", Set.of(new SimpleGrantedAuthority("ROLE_STUDENT")), "teacher1"),
+                new Student("user2", "강강이", Set.of(new SimpleGrantedAuthority("ROLE_STUDENT")), "teacher1"),
+                new Student("user3", "뭉치", Set.of(new SimpleGrantedAuthority("ROLE_STUDENT")), "teacher1")
         ).forEach(s ->
                 studentDB.put(s.getId(), s)
         );
+    }
+
+    public List<Student> students(String teacherId) {
+        return studentDB.values().stream().filter(s -> s.getTeacherId().equals(teacherId))
+            .collect(Collectors.toList());
     }
 }
