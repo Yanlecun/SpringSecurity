@@ -19,12 +19,11 @@ public class TeacherManager implements AuthenticationProvider, InitializingBean 
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication;
-        if(teacherDB.containsKey(token.getName())) {
-            Teacher teacher = teacherDB.get(token.getName());
+        TeacherAuthenticationToken token = (TeacherAuthenticationToken) authentication;
+        if(teacherDB.containsKey(token.getCredentials())) {
+            Teacher teacher = teacherDB.get(token.getCredentials());
             return TeacherAuthenticationToken.builder()
                     .principal(teacher)
-                    .credentials(null)
                     .details(teacher.getUsername())
                     .authenticated(true)
                     .build();
@@ -34,7 +33,7 @@ public class TeacherManager implements AuthenticationProvider, InitializingBean 
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return authentication == UsernamePasswordAuthenticationToken.class;
+        return authentication == TeacherAuthenticationToken.class;
     }
     @Override
     public void afterPropertiesSet() throws Exception {

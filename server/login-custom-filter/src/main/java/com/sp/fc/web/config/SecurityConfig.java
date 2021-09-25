@@ -39,14 +39,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CustomLoginFilter filter = new CustomLoginFilter(authenticationManager());
         http
                 .authorizeRequests(request ->
-                        request.antMatchers("/","login").permitAll() // formLogin 주석하고 추가
+                        request.antMatchers("/").permitAll() // formLogin 주석하고 추가
                                 .anyRequest().authenticated()
                 )
-//                .formLogin(
-//                        login -> login.loginPage("/login").permitAll()
-//                                .defaultSuccessUrl("/", false)
-//                                .failureUrl("/login-error")
-//                )
+                .formLogin(
+                        login -> login.loginPage("/login").permitAll()
+                                .failureUrl("/login-error")
+                                .defaultSuccessUrl("/", false)
+                )
+
                 .addFilterAt(filter, UsernamePasswordAuthenticationFilter.class) // 필터 교체하기
                 .logout(
                         logout -> logout.logoutSuccessUrl("/")

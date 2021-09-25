@@ -20,13 +20,15 @@ public class StudentManager implements AuthenticationProvider, InitializingBean 
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication; // 나중에 설명 더 하겠음
-        if(studentDB.containsKey(token.getName())) { // 이름이 아이디와 같다면
+        //UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) authentication; // radio버튼 구현하면서 ㅂㅇ
+        StudentAuthenticationToken token = (StudentAuthenticationToken) authentication;
+        //if(studentDB.containsKey(token.getName())) { // 이름이 아이디와 같다면
+        if(studentDB.containsKey(token.getCredentials())) { // 이름이 아이디와 같다면
             // studentDB에 있다면, 인증 토큰을 발행하는 Authentication provider
-            Student student = studentDB.get(token.getName());
+            //Student student = studentDB.get(token.getName());
+            Student student = studentDB.get(token.getCredentials());
             return StudentAuthenticationToken.builder()
                     .principal(student)
-                    .credentials(null)
                     .details(student.getUsername())
                     .authenticated(true)
                     .build();
@@ -38,7 +40,9 @@ public class StudentManager implements AuthenticationProvider, InitializingBean 
     public boolean supports(Class<?> authentication) {
         // UsernamePasswordAuthentication필터를 통해 토큰을 받기 때문에
         // 이 클래스의 형태의 토큰을 받으면 검증을 하는 provier로서 동작하겠다고 알림
-        return authentication == UsernamePasswordAuthenticationToken.class;
+
+        //return authentication == UsernamePasswordAuthenticationToken.class; radio체크로 관리자/학생 구현
+        return authentication == StudentAuthenticationToken.class;
     }
 
     // 빈이 초기화 되었을 때 Student DB

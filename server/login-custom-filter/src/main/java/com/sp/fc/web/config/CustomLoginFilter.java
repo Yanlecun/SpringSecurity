@@ -1,5 +1,7 @@
 package com.sp.fc.web.config;
 
+import com.sp.fc.web.student.StudentAuthenticationToken;
+import com.sp.fc.web.teacher.TeacherAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,8 +26,20 @@ public class CustomLoginFilter extends UsernamePasswordAuthenticationFilter {
         username = username.trim();
         String password = obtainPassword(request);
         password = (password != null) ? password : "";
-        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
+        String type = request.getParameter("type");
+        if (type == null || !type.equals("teacher")) {
+            StudentAuthenticationToken token = StudentAuthenticationToken.builder()
+                    .credentials(username).build();  // 비밀번호도 넘겨야하지만, 태스트라서 그냥 진행하자
+            return this.getAuthenticationManager().authenticate(token);
+
+        } else {
+            TeacherAuthenticationToken token = TeacherAuthenticationToken.builder()
+                    .credentials(username).build();
+            return this.getAuthenticationManager().authenticate(token);
+
+        }
+        //UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
 //        setDetails(request, authRequest); details는ㄴㄴ
-        return this.getAuthenticationManager().authenticate(authRequest);
+        //return this.getAuthenticationManager().authenticate(authRequest);
     }
 }
