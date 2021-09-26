@@ -3,7 +3,6 @@ package com.sp.fc.web.student;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,7 +24,7 @@ public class StudentManager implements AuthenticationProvider, InitializingBean 
         //if(studentDB.containsKey(token.getName())) { // 이름이 아이디와 같다면
         if(studentDB.containsKey(token.getCredentials())) { // 이름이 아이디와 같다면
             // studentDB에 있다면, 인증 토큰을 발행하는 Authentication provider
-            //Student student = studentDB.get(token.getName());
+            //Student com.sp.fc.web.student = studentDB.get(token.getName());
             Student student = studentDB.get(token.getCredentials());
             return StudentAuthenticationToken.builder()
                     .principal(student)

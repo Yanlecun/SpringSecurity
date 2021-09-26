@@ -34,11 +34,12 @@
             </div>
 
             <div class="type-select">
-                <input type="radio" name="type" value="com.sp.fc.web.student" checked> 학생
-                <input type="radio" name="type" value="com.sp.fc.web.teacher"> 선생님
+                <input type="radio" name="type" value="student" checked> 학생
+                <input type="radio" name="type" value="teacher"> 선생님
             </div>
 
             <button class="btn btn-lg btn-primary btn-block"  type="submit"> 로그인 </button>
+            <!--/*@thymesVar id="loginError" type="boolean"*/-->
             <div class="error-message" th:if="${loginError}">
                 <span> 아이디나 패스워드가 올바르지 않습니다. </span>
             </div>

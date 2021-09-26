@@ -19,10 +19,10 @@
             <a href="/login">  로그인 </a>
         </div>
         <div class="link" sec:authorize="authenticated">
-            <a href="/com.sp.fc.web.student/main">  학생 페이지  </a>
+            <a href="/student/main">  학생 페이지  </a>
         </div>
         <div class="link" sec:authorize="authenticated">
-            <a href="/com.sp.fc.web.teacher/main">  선생님 페이지 </a>
+            <a href="/teacher/main">  선생님 페이지 </a>
         </div>
         <div class="link" sec:authorize="authenticated">
             <form th:action="@{/logout}" method="post">

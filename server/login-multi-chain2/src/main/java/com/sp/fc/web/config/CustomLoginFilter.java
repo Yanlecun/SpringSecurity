@@ -1,5 +1,6 @@
 package com.sp.fc.web.config;
 
+
 import com.sp.fc.web.student.StudentAuthenticationToken;
 import com.sp.fc.web.teacher.TeacherAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
