@@ -3,6 +3,7 @@ package com.sp.fc.web.teacher;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,21 +19,33 @@ public class TeacherManager implements AuthenticationProvider, InitializingBean 
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        if(authentication instanceof UsernamePasswordAuthenticationToken) {
+            UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)authentication;
+            if(teacherDB.containsKey(token.getName())){
+                return getTeacherAuthenticationToken(token.getName());
+            }
+            return null; // 처리할 수 없다면 null, 없으면 오류
+        }
         TeacherAuthenticationToken token = (TeacherAuthenticationToken) authentication;
         if(teacherDB.containsKey(token.getCredentials())) {
-            Teacher teacher = teacherDB.get(token.getCredentials());
-            return TeacherAuthenticationToken.builder()
-                    .principal(teacher)
-                    .details(teacher.getUsername())
-                    .authenticated(true)
-                    .build();
+            return getTeacherAuthenticationToken(token.getCredentials());
         }
         return null;
     }
 
+    private TeacherAuthenticationToken getTeacherAuthenticationToken(String id) {
+        Teacher teacher = teacherDB.get(id);
+        return TeacherAuthenticationToken.builder()
+                .principal(teacher)
+                .details(teacher.getUsername())
+                .authenticated(true)
+                .build();
+    }
+
     @Override
     public boolean supports(Class<?> authentication) {
-        return authentication == TeacherAuthenticationToken.class;
+        return authentication == TeacherAuthenticationToken.class ||
+                authentication == UsernamePasswordAuthenticationToken.class;
     }
     @Override
     public void afterPropertiesSet() throws Exception {
