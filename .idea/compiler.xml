@@ -10,6 +10,7 @@
         <module name="spring-security.web-user-admin.main" />
         <module name="spring-security.server-login-basic.test" />
         <module name="spring-security.server-login-multi-chain.main" />
+        <module name="spring-security.server-login-rememberme.main" />
         <module name="spring-security.server-login-userdetails.main" />
         <module name="spring-security.server-login-custom-filter.test" />
         <module name="spring-security.server-login-multi-chain2.main" />
@@ -19,6 +20,7 @@
         <module name="spring-security.server-basic-test.main" />
         <module name="spring-security.server-basic-authentication-test.test" />
         <module name="spring-security.server-login-multi-chain.test" />
+        <module name="spring-security.server-login-rememberme.test" />
         <module name="spring-security.server-login-userdetails.test" />
         <module name="spring-security.server-login-custom-filter.main" />
         <module name="spring-security.comp-user-admin.test" />
