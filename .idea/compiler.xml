@@ -21,6 +21,7 @@
         <module name="spring-security.server-basic-authentication-test.test" />
         <module name="spring-security.server-login-multi-chain.test" />
         <module name="spring-security.server-login-rememberme.test" />
+        <module name="spring-security.server-login-session-management.test" />
         <module name="spring-security.server-login-userdetails.test" />
         <module name="spring-security.server-login-custom-filter.main" />
         <module name="spring-security.comp-user-admin.test" />
@@ -28,6 +29,7 @@
         <module name="spring-security.web-student-teacher.main" />
         <module name="spring-security.comp-user-admin.main" />
         <module name="spring-security.web-user-admin.test" />
+        <module name="spring-security.server-login-session-management.main" />
         <module name="spring-security.web-student-teacher.test" />
       </profile>
     </annotationProcessing>
