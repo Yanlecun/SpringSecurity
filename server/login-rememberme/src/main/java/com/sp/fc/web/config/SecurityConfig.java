@@ -14,19 +14,29 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.*;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 import javax.servlet.http.HttpSessionEvent;
+import javax.sql.DataSource;
 import java.time.LocalDateTime;
 
 @EnableWebSecurity(debug = true)
 @EnableGlobalMethodSecurity(prePostEnabled = true) // @PreAuthorize in HomeController
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    RememberMeAuthenticationFilter rememberMeAuthenticationFilter;
+    TokenBasedRememberMeServices tokenBasedRememberMeServices;
+    PersistentTokenBasedRememberMeServices persistentTokenBasedRememberMeServices;
+
     private final SpUserService userService;
-    public SecurityConfig(SpUserService userService) {
+    private final DataSource dataSource;
+
+    public SecurityConfig(DataSource dataSource, SpUserService userService) {
+        this.dataSource = dataSource;
         this.userService = userService;
     }
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -60,7 +70,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 .failureUrl("/login-error")
                 )
                 .logout(logout -> logout.logoutSuccessUrl("/"))
-                .exceptionHandling(exception -> exception.accessDeniedPage("/access-denied"))  // user가 관리자 페이지로 들어갔을 때
+                .exceptionHandling(exception -> exception.accessDeniedPage("/access-denied"))
+                .rememberMe(r -> r
+                        .rememberMeServices(rememberMeServices())) // persistanceTokenBased로 동작하게 된다.
         ;
     }
 
@@ -71,12 +83,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         PathRequest.toStaticResources().atCommonLocations(),
                         PathRequest.toH2Console() // 테스트를 위한 h2 콘솔을 열어줌
                 );
-
     }
 
     @Bean
     public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisher() {
-        return new ServletListenerRegistrationBean<HttpSessionEventPublisher>(new HttpSessionEventPublisher(){
+        return new ServletListenerRegistrationBean<HttpSessionEventPublisher>(new HttpSessionEventPublisher() {
             @Override
             public void sessionCreated(HttpSessionEvent event) {
                 super.sessionCreated(event);
@@ -92,8 +103,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             @Override
             public void sessionIdChanged(HttpSessionEvent event, String oldSessionId) {
                 super.sessionIdChanged(event, oldSessionId);
-                System.out.printf("===>> [%s] 세션 아이디 변경  %s:%s \n",  LocalDateTime.now(), oldSessionId, event.getSession().getId());
+                System.out.printf("===>> [%s] 세션 아이디 변경  %s:%s \n", LocalDateTime.now(), oldSessionId, event.getSession().getId());
             }
         });
+    }
+
+    @Bean
+    PersistentTokenRepository tokenRepository() {
+        JdbcTokenRepositoryImpl repository = new JdbcTokenRepositoryImpl(); // datasource를 주입 받아야 함
+        repository.setDataSource(dataSource);
+        try {
+            repository.removeUserTokens("1"); // 삭제를 했을 때 
+        } catch (Exception e) {
+            repository.setCreateTableOnStartup(true); // 문제가 생기면 table을 만들도록 함 (그냥 당연히 만들고 감)
+        }
+        return repository;
+    }
+
+    @Bean
+    PersistentTokenBasedRememberMeServices rememberMeServices() {
+        PersistentTokenBasedRememberMeServices services =
+                new PersistentTokenBasedRememberMeServices("hello" // key값 아무거나,
+                        , userService
+                        , tokenRepository());
+        return services;
     }
 }
