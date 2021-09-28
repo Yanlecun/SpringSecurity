@@ -72,7 +72,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 .failureUrl("/login-error")
                 )
                 .logout(logout -> logout.logoutSuccessUrl("/"))
-                .exceptionHandling(exception -> exception.accessDeniedPage("/access-denied"))
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(new CustomDeniedHandler())
+                        .authenticationEntryPoint(new CustomEntryPoint())
+                ) // auth entrypoint구현
+                        //.accessDeniedPage("/access-denied")) // handler가 관리하는 페이지라서 무시
                 .rememberMe(r -> r
                         .rememberMeServices(rememberMeServices())) // persistanceTokenBased로 동작하게 된다.
                 .sessionManagement(s-> s
