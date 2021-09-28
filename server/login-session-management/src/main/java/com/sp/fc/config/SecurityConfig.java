@@ -12,6 +12,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.*;
@@ -73,12 +75,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling(exception -> exception.accessDeniedPage("/access-denied"))
                 .rememberMe(r -> r
                         .rememberMeServices(rememberMeServices())) // persistanceTokenBased로 동작하게 된다.
-        ;
+                .sessionManagement(s-> s
+                        //.sessionCreationPolicy(p-> SessionCreationPolicy.ALWAYS)
+                        //.sessionFixation(sessionFixationConfigurer -> sessionFixationConfigurer.none())
+                        .maximumSessions(1)  // 유저당 한 세션 허용
+                        .maxSessionsPreventsLogin(false) // 새로 들어온 세션을 인정, 기존 세션을 만료시킴
+                        .expiredUrl("/session-expired")  // 만료된 세션을 가진 유저에게 보낼 페이지
+                )
+                ;
     }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
+                // 권한에서 체크하지 않는 권한으로 설정
+                .antMatchers("/sessions", "/session/expire", "/session-expired")
                 .requestMatchers(
                         PathRequest.toStaticResources().atCommonLocations(),
                         PathRequest.toH2Console() // 테스트를 위한 h2 콘솔을 열어줌
@@ -126,6 +137,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 new PersistentTokenBasedRememberMeServices("hello" // key값 아무거나,
                         , userService
                         , tokenRepository());
+        services.setAlwaysRemember(true);  // 원래라면 httpSecurity에 붙여야하지만 커스텀해서 만들었으니 여기에 붙이자..매번 로그인하기 귀찮음
         return services;
+    }
+
+    @Bean
+    SessionRegistry sessionRegistry() {  // Impl로 구현체 받아오기
+        SessionRegistryImpl registry = new SessionRegistryImpl();
+        return registry;
     }
 }

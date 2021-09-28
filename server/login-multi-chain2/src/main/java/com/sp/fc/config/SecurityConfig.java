@@ -1,8 +1,9 @@
-package com.sp.fc.web.config;
+package com.sp.fc.config;
 
 import com.sp.fc.web.student.StudentManager;
 import com.sp.fc.web.teacher.TeacherManager;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,7 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@EnableWebSecurity(debug = true)
+@Order(2)
+@EnableWebSecurity(debug = false) // 세션 오류 때문에
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 

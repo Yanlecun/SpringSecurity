@@ -1,4 +1,4 @@
-package com.sp.fc.web.config;
+package com.sp.fc.config;
 
 import com.sp.fc.web.student.StudentAuthenticationToken;
 import com.sp.fc.web.teacher.TeacherAuthenticationToken;

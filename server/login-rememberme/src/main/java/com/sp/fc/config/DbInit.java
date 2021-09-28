@@ -1,4 +1,4 @@
-package com.sp.fc.web.config;
+package com.sp.fc.config;
 
 import com.sp.fc.user.domain.SpUser;
 import com.sp.fc.user.service.SpUserService;

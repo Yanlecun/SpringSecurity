@@ -1,10 +1,9 @@
-package com.sp.fc.web.config;
+package com.sp.fc.config;
 
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.http.HttpRequest;
 import java.time.LocalDateTime;
 
 

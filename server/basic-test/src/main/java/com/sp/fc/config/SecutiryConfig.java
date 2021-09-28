@@ -1,4 +1,4 @@
-package com.sp.fc.web.config;
+package com.sp.fc.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
