@@ -1,17 +1,18 @@
 package com.sp.fc.web.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 import java.util.Collection;
 
@@ -24,8 +25,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new AccessDecisionManager() {
             @Override
             public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
-                // thorow new AccessDeniedException("접근 금지")
-                return ;
+                throw new AccessDeniedException("접근 금지");
+                //return ;
             }
 
             @Override
@@ -48,19 +49,35 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         User.withDefaultPasswordEncoder()
                                 .username("user1")
                                 .password("1111")
-                                .roles("USER")
+                                .roles("USER", "STUDENT")
+                )
+                .withUser(
+                        User.withDefaultPasswordEncoder()
+                                .username("user2")
+                                .password("1111")
+                                .roles("USER", "STUDENT")
+                )
+                .withUser(
+                        User.withDefaultPasswordEncoder()
+                                .username("tutor1")
+                                .password("1111")
+                                .roles("USER", "TUTOR")
                 );
     }
+
+    @Autowired
+    private NameCheck nameCheck;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
                 .httpBasic().and()
-                .authorizeRequests(auth-> auth
-                        .mvcMatchers("greeting").hasRole("USER")
-                        .anyRequest().authenticated()
-                        .accessDecisionManager(filterAccessDecisionManager())
+                .authorizeRequests(auth -> auth
+                                .mvcMatchers("greeting/{name}")//.hasRole("USER")
+                                .access("@nameCheck.check(#name)") // SpEL이용, 인자로 PathVariable 넣기, true면 통과
+                                .anyRequest().authenticated()
+//                        .accessDecisionManager(filterAccessDecisionManager())
                 )
         ;
     }

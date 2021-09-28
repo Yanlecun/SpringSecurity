@@ -19,7 +19,7 @@ public class HomeController {
         return "hello";
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("@nameCheck.check(#name) ")
     @GetMapping("/greeting/{name}")
     public String greeting(@PathVariable String name) {
         return "hello " + securityMessageService.message(name);  // 서비스에서 hasRole가 admin이라서 x
