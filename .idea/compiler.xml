@@ -12,25 +12,29 @@
         <module name="spring-security.server-login-multi-chain.main" />
         <module name="spring-security.server-login-rememberme.main" />
         <module name="spring-security.server-login-userdetails.main" />
-        <module name="spring-security.server-login-custom-filter.test" />
         <module name="spring-security.server-login-multi-chain2.main" />
-        <module name="spring-security.server-login-basic.main" />
-        <module name="spring-security.server-basic-test.test" />
-        <module name="spring-security.server-basic-authentication-test.main" />
         <module name="spring-security.server-basic-test.main" />
         <module name="spring-security.server-basic-authentication-test.test" />
         <module name="spring-security.server-login-multi-chain.test" />
         <module name="spring-security.server-login-rememberme.test" />
         <module name="spring-security.server-login-session-management.test" />
-        <module name="spring-security.server-login-userdetails.test" />
         <module name="spring-security.server-login-custom-filter.main" />
-        <module name="spring-security.comp-user-admin.test" />
         <module name="spring-security.server-login-multi-chain2.test" />
         <module name="spring-security.web-student-teacher.main" />
         <module name="spring-security.comp-user-admin.main" />
+        <module name="spring-security.test-web-util.test" />
+        <module name="spring-security.server-authority-test.main" />
+        <module name="spring-security.server-login-custom-filter.test" />
+        <module name="spring-security.server-login-basic.main" />
+        <module name="spring-security.server-basic-test.test" />
+        <module name="spring-security.server-basic-authentication-test.main" />
+        <module name="spring-security.server-login-userdetails.test" />
+        <module name="spring-security.comp-user-admin.test" />
         <module name="spring-security.web-user-admin.test" />
         <module name="spring-security.server-login-session-management.main" />
         <module name="spring-security.web-student-teacher.test" />
+        <module name="spring-security.server-authority-test.test" />
+        <module name="spring-security.test-web-util.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="14" />

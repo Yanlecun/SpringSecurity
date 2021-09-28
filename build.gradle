@@ -59,7 +59,7 @@ subprojects {  // 프로젝트의 하위 폴더 생성
 }
 
 
-["server"].each {
+["server","test"].each {
     def subProjectDir = new File(projectDir, it)
     subProjectDir.eachDir {dir->
         def projectName = ":${it}-${dir.name}"
